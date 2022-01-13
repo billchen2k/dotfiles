@@ -4,7 +4,7 @@ syntax on
 set rnu!
 set nu!
 set autoindent
-set rulerformat=%35(%2*%<%f%=\ %m%r\ %3l\ %c\ %p%%%) 
+set rulerformat=%35(%2*%<%f%=\ %m%r\ %3l\ %c\ %p%%%)
 set mouse=a
 set showmatch
 set ruler
@@ -81,7 +81,7 @@ call vundle#begin()
 " let Vundle manage Vundle, required
 Plugin 'VundleVim/Vundle.vim'
 Plugin 'godlygeek/tabular'
-Plugin 'plasticboy/vim-markdown'
+" Plugin 'plasticboy/vim-markdown'
 Plugin 'jiangmiao/auto-pairs'
 Plugin 'preservim/nerdcommenter'
 Plugin 'DoxygenToolkit.vim'

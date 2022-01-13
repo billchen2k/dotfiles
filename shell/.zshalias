@@ -1,0 +1,25 @@
+
+alias bootcamp="/usr/sbin/bless -mount /Volumes/BOOTCAMP --setBoot  --nextonly; reboot"
+alias tmd="tmutil deletelocalsnapshots /System/Volumes/Data"
+alias ipic="/usr/libexec/PlistBuddy -c "Set ':values:Markdown Flag:value' `date +%s`" /Users/`whoami`/Library/Containers/net.toolinbox.ipic/Data/Library/SyncedPreferences/net.toolinbox.ipic.plist && nohup /Applications/iPic.app/Contents/MacOS/iPic &"
+alias prl="sudo -b /Applications/Parallels\ Desktop.app/Contents/MacOS/prl_client_app"
+alias osscount="ossutil ls oss://billc/img | wc -l | xargs -I {} echo {}-4 | bc | xargs printf 'Total images in oss://billc/img: %d\n'"
+alias aget="aria2c"
+alias brewski="brew update && brew upgrade && brew cleanup -s; brew doctor && rm -rdf /Users/billchen/Library/Caches/Homebrew"
+alias cdc="cd ~/Workspace/LearningRepo/Course/"
+alias killnotif="ps -ax | grep /NotificationCenter | awk 'NR==1 {print $1}' | xargs kill -9"
+# alias vim=nvim
+alias cloce="cloc --exclude-dir=node_modules,public,dist,build,target ."
+
+# alias g++=g++-11
+# alias c++=c++-11
+# alias gcc=gcc-11
+# alias cpp=cpp-11
+
+alias mkdir='mkdir -v'
+alias mv='mv -v'
+alias cp='cp -v'
+alias rm='rm -v'
+alias ln='ln -v'
+
+alias cdtmp='cd `mktemp -d /tmp/billc-XXXXXX`'

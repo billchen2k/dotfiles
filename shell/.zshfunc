@@ -1,0 +1,40 @@
+function w3mg() {
+    w3m https://www.google.com/search\?q=${1}
+}
+
+function gitnew() {
+    touch ${1}
+    echo ${1} >> ${1}
+    git add .
+    git commit -m "${1}"
+}
+
+function powerstat() {
+    b=$(system_profiler SPPowerDataType)
+    amp=$(echo "$b" | grep 'Amperage (mA):' | cut -d ':' -f 2 | xargs)
+    volt=$(echo "$b" | grep 'Voltage (mV):' | cut -d ':' -f 2 | xargs)
+    power=$(($amp * $volt / 1000))
+    echo "$b" | grep --color=never -A 1 'Battery Information:'
+    echo "$b" | grep --color=never -A 1 'Amperage (mA)'
+    echo "      Total Power (mW): $power"
+    echo ""
+    echo "$b" | grep --color=never -A 99 'AC Charger Information:'
+}
+
+function patch (){
+    xattr -cr "$1"
+    sudo codesign --force --deep --sign - "$1"
+    echo "$1"
+}
+
+function tmlog() {
+    printf '\e[3J' && log show --predicate 'subsystem == "com.apple.TimeMachine"' --info --last 6h | grep -F 'eMac' | grep -Fv 'etat' | awk -F']' '{print substr($0,1,19), $NF}'
+}
+
+function addpath() {
+    if [ -d "$1" ]; then
+        echo "export PATH=$1:\$PATH" >> ~/.zshrc
+        echo "Added $1 to PATH."
+        source ~/.zshrc
+    fi
+}
