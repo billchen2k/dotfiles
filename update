@@ -1,0 +1,12 @@
+#!/bin/zsh
+
+# Collect files on the system.
+
+read -p "Are you sure to collect your configuration files on the system? [y/N] " -n 1 -r
+echo    # (optional) move to a new line
+
+# cp ~/.zshrc shell/.zshrc
+cp ~/.p10k.zsh shell/.p10k.zsh
+cp ~/.zshalias shell/.zshalias
+cp ~/.zshfunc shell/.zshfunc
+cp ~/.vimrc vim/.vimrc
