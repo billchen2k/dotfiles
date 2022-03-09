@@ -1,17 +1,17 @@
 # todo
-apt-get update
-apt-get install -y zsh
-apt-get install -y git
-apt-get install -y curl
+sudo apt-get update
+sudo apt-get install -y zsh
+sudo apt-get install -y git
+sudo apt-get install -y curl
 # apt-get install -y nvim
-apt-get install -y vim
-apt-get install -y wget
-apt-get install -y tmux
+sudo apt-get install -y vim
+sudo apt-get install -y wget
+sudo apt-get install -y tmux
 
 # ----- Shell -----
 
 # Oh-my-zsh
-chsh -s $(which zsh)
+# chsh -s $(which zsh)
 sh -c "$(curl -fsSL https://raw.github.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
 
 # p10k
