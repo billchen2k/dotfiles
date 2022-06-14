@@ -1,9 +1,9 @@
 #!/bin/bash
 
-apt update
-apt install -y zsh git curl vim wget tmux
+dnf makecache
+dnf install -y zsh git curl vim wget tmux
 
-if [[ $1 == "--cn" ]]
+if [ $1 = "--cn" ]
 then
     echo "Will use cn proxy."
     export cnproxy=https://ghproxy.com/

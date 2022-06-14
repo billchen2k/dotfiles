@@ -1,0 +1,38 @@
+# ----- Shell -----
+
+# Oh-my-zsh
+# chsh -s $(which zsh)
+sh -c "$(curl -fsSL ${cnproxy}https://raw.github.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
+
+# p10k
+git clone --depth=1 ${cnproxy}https://github.com/romkatv/powerlevel10k.git ${ZSH_CUSTOM:-$HOME/.oh-my-zsh/custom}/themes/powerlevel10k
+sed -i.bak 's#^ZSH_THEME=\".*\"#ZSH_THEME=\"powerlevel10k/powerlevel10k\"#g' ~/.zshrc
+cp shell/.p10k.zsh ~/.p10k.zsh
+cp shell/.zshalias ~/.zshalias
+cp shell/.zshfunc ~/.zshfunc
+cat shell/.zshrc >> ~/.zshrc
+echo 'POWERLEVEL9K_DISABLE_CONFIGURATION_WIZARD=true' >> ~/.zshrc
+
+# Plugins
+git clone ${cnproxy}https://github.com/zsh-users/zsh-autosuggestions ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/zsh-autosuggestions
+git clone ${cnproxy}https://github.com/zsh-users/zsh-syntax-highlighting.git ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/zsh-syntax-highlighting
+sed -i.bak 's/^plugins=(\(.*\)/plugins=(zsh-autosuggestions zsh-syntax-highlighting git cp \1/' ~/.zshrc
+
+# ----- VIM (NVIM) -----
+
+# mkdir -p ~/.config/nvim
+# touch ~/.config/nvim/init.vim
+# echo "set runtimepath^=~/.vim runtimepath+=~/.vim/after" >> ~/.config/nvim/init.vim
+# echo "let &packpath = &runtimepath" >> ~/.config/nvim/init.vim
+# echo "source ~/.vimrc" >> ~/.config/nvim/init.vim
+
+# Vundle
+git clone ${cnproxy}https://github.com/VundleVim/Vundle.vim.git ~/.vim/bundle/Vundle.vim
+cp vim/.vimrc ~/.vimrc
+
+# Install vim plugins
+vim +PluginInstall +qall
+
+
+echo 'Finished.'
+zsh
