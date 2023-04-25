@@ -1,0 +1,24 @@
+#!/bin/bash
+
+sudo dnf makecache
+sudo dnf install -y zsh git curl vim wget tmux
+
+# Powertools for 8
+sudo dnf config-manager --set-enabled PowerTools
+# crb for 9
+sudo dnf config-manager --enable crb
+# EPEL
+sudo dnf install -y epel-release
+
+sudo dnf install -y util-linux-user pciutils lsof htop
+sudo dnf isntall -y xorg-x11-xauth cmake ninja-build
+
+if [ $1 = "--cn" ]
+then
+    echo "Will use cn proxy."
+    export cnproxy=https://ghproxy.com/
+else
+    unset cnproxy
+fi
+
+./install-base
