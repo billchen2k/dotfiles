@@ -1,7 +1,7 @@
 #!/bin/bash
 
 sudo dnf makecache
-sudo dnf install -y zsh git curl vim wget tmux
+sudo dnf install -y zsh git curl vim wget tmux pipx
 
 # Powertools for 8
 sudo dnf config-manager --set-enabled PowerTools

@@ -38,3 +38,7 @@ function addpath() {
         source ~/.zshrc
     fi
 }
+
+function ss() {
+    sgpt --shell "$*"
+}
