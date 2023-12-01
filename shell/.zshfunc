@@ -39,6 +39,6 @@ function addpath() {
     fi
 }
 
-function ss() {
+function sgs() {
     sgpt --shell "$*"
 }

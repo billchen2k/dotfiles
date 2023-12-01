@@ -33,6 +33,5 @@ cp vim/.vimrc ~/.vimrc
 # Install vim plugins
 vim +PluginInstall +qall
 
-
 echo 'Finished.'
 zsh
