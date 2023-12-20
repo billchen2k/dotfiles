@@ -1,15 +1,17 @@
 #!/bin/bash
 
-apt update
-apt install sudo -y # in case already in root
-sudo apt install -y zsh git curl vim wget tmux pipx
-
-if [[ $1 == "--cn" ]]
-then
+if [[ $1 == "--cn" ]]; then
     echo "Will use cn proxy."
     export cnproxy=https://mirror.ghproxy.com/
+    sed -i "s@http://.*archive.ubuntu.com@http://mirrors.tuna.tsinghua.edu.cn@g" /etc/apt/sources.list
+    sed -i "s@http://.*security.ubuntu.com@http://mirrors.tuna.tsinghua.edu.cn@g" /etc/apt/sources.list
+    sed -i "s@http://ports.ubuntu.com/ubuntu-ports/@http://mirrors.tuna.tsinghua.edu.cn/ubuntu-ports/@g" /etc/apt/sources.list
 else
     unset cnproxy
 fi
+
+apt update
+apt install sudo -y # in case already in root
+sudo apt install -y zsh git curl vim wget tmux tree iputils-ping
 
 ./install-base
