@@ -152,3 +152,26 @@ function ffcom() {
     return 1
   fi
 }
+
+sshperm() {
+  local ssh_dir="$HOME/.ssh"
+  if [[ ! -d $ssh_dir ]]; then
+    echo "Error: $ssh_dir does not exist."
+    return 1
+  fi
+  echo "Setting permissions for $ssh_dir..."
+  chmod 700 "$ssh_dir"
+  echo "Fixing permissions for private keys..."
+  find "$ssh_dir" -type f -name "id_*" -exec chmod 600 {} \;
+  echo "Fixing permissions for public keys..."
+  find "$ssh_dir" -type f -name "*.pub" -exec chmod 644 {} \;
+  if [[ -f "$ssh_dir/authorized_keys" ]]; then
+    echo "Fixing permissions for authorized_keys..."
+    chmod 600 "$ssh_dir/authorized_keys"
+  fi
+  if [[ -f "$ssh_dir/known_hosts" ]]; then
+    echo "Fixing permissions for known_hosts..."
+    chmod 644 "$ssh_dir/known_hosts"
+  fi
+  echo "SSH permissions fixed successfully!"
+}

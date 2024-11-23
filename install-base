@@ -14,7 +14,6 @@ cp shell/.p10k.zsh ~/.p10k.zsh
 cp shell/.zshalias ~/.zshalias
 cp shell/.zshfunc ~/.zshfunc
 cat shell/.zshrc >> ~/.zshrc
-echo 'POWERLEVEL9K_DISABLE_CONFIGURATION_WIZARD=true' >> ~/.zshrc
 
 # Plugins
 git clone ${cnproxy}https://github.com/zsh-users/zsh-autosuggestions ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/zsh-autosuggestions
@@ -61,6 +60,7 @@ ln -s "$(pwd)/git/.gitignore_global" ~/.config/.gitignore_global
 # ----- Others -----
 
 # zoixide
+echo "" >> ~/.zshrc
 echo "export PATH=\$PATH:~/.local/bin" >> ~/.zshrc
 echo "eval \"\$(zoxide init zsh)\"" >> ~/.zshrc
 curl -sSfL ${cnproxy}https://raw.githubusercontent.com/ajeetdsouza/zoxide/main/install.sh | sh

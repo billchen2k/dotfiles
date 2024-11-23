@@ -18,7 +18,6 @@ alias ln='ln -v'
 
 alias cdtmp='cd `mktemp -d /tmp/billc-XXXXXX`'
 alias scpr='rsync -P --rsh=ssh'
-alias z='zoxide'
 
 if [ -x "$(command -v exa)" ]; then
     alias ls="exa -1 --classify --group-directories-first --grid"
