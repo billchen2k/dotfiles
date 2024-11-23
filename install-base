@@ -1,9 +1,12 @@
+#!/bin/bash
+
 # ----- Shell -----
 
 # Oh-my-zsh
 export RUNZSH=no
 export CHSH=no
 sh -c "$(curl -fsSL ${cnproxy}https://raw.github.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
+
 # p10k
 git clone --depth=1 ${cnproxy}https://github.com/romkatv/powerlevel10k.git ${ZSH_CUSTOM:-$HOME/.oh-my-zsh/custom}/themes/powerlevel10k
 sed -i.bak 's#^ZSH_THEME=\".*\"#ZSH_THEME=\"powerlevel10k/powerlevel10k\"#g' ~/.zshrc
@@ -16,23 +19,52 @@ echo 'POWERLEVEL9K_DISABLE_CONFIGURATION_WIZARD=true' >> ~/.zshrc
 # Plugins
 git clone ${cnproxy}https://github.com/zsh-users/zsh-autosuggestions ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/zsh-autosuggestions
 git clone ${cnproxy}https://github.com/zsh-users/zsh-syntax-highlighting.git ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/zsh-syntax-highlighting
-sed -i.bak 's/^plugins=(\(.*\)/plugins=(zsh-autosuggestions zsh-syntax-highlighting git cp \1/' ~/.zshrc
+sed -i.bak 's/^plugins=(\(.*\)/plugins=(zsh-autosuggestions zsh-syntax-highlighting git cp poetry tmux \1/' ~/.zshrc
 
 # ----- VIM (NVIM) -----
 
-# mkdir -p ~/.config/nvim
-# touch ~/.config/nvim/init.vim
-# echo "set runtimepath^=~/.vim runtimepath+=~/.vim/after" >> ~/.config/nvim/init.vim
-# echo "let &packpath = &runtimepath" >> ~/.config/nvim/init.vim
-# echo "source ~/.vimrc" >> ~/.config/nvim/init.vim
+mkdir -p ~/.config/nvim
+touch ~/.config/nvim/init.vim
+echo "set runtimepath^=~/.vim runtimepath+=~/.vim/after" >> ~/.config/nvim/init.vim
+echo "let &packpath = &runtimepath" >> ~/.config/nvim/init.vim
+echo "source ~/.vimrc" >> ~/.config/nvim/init.vim
 
-# Vundle
-git clone ${cnproxy}https://github.com/VundleVim/Vundle.vim.git ~/.vim/bundle/Vundle.vim
-cp vim/.vimrc ~/.vimrc
+# vim-plug
+curl -fLo ~/.vim/autoload/plug.vim --create-dirs ${cnproxy}https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
 
-# Install vim plugins
-vim +PluginInstall +qall
+if [ -f ~/.vimrc ]; then
+    mv ~/.vimrc ~/.vimrc.$(date +%Y%m%d%H%M%S).bak
+fi
+ln -s "$(pwd)/vim/.vimrc" ~/.vimrc
 
-echo 'Finished.'
+# Install vim-plug plugins
+vim +PlugInstall +qall
+
+# ----- Tmux -----
+git clone ${cnproxy}https://github.com/tmux-plugins/tpm ~/.tmux/plugins/tpm
+if [ -f ~/.tmux.conf ]; then
+    mv ~/.tmux.conf ~/.tmux.conf.$(date +%Y%m%d%H%M%S).bak
+fi
+ln -s "$(pwd)/tmux/.tmux.conf" ~/.tmux.conf
+
+# ----- Git -----
+echo
+git config --global user.name "Bill Chen"
+git config --global user.email "dev@billc.io"
+git config --global core.editor nvim
+git config --global core.pager "less -R"
+git config --global core.excludesfile ~/.config/.gitignore_global
+
+mkdir -p ~/.config
+ln -s "$(pwd)/git/.gitignore_global" ~/.config/.gitignore_global
+
+# ----- Others -----
+
+# zoixide
+echo "export PATH=\$PATH:~/.local/bin" >> ~/.zshrc
+echo "eval \"\$(zoxide init zsh)\"" >> ~/.zshrc
+curl -sSfL ${cnproxy}https://raw.githubusercontent.com/ajeetdsouza/zoxide/main/install.sh | sh
+
 chsh -s $(which zsh)
+echo "Finished. Please DO NOT move the dotfiles directory, or the symbolic links will be broken."
 zsh

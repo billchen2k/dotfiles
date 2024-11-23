@@ -1,5 +1,7 @@
-" @BillChen2K's Configuration
-" V2020.7
+" @billchen2k's configuration
+" created: 2020.7
+" updated: 2024.11
+
 syntax on
 set rnu!
 set nu!
@@ -15,82 +17,61 @@ set shiftwidth=4
 set expandtab
 set smarttab
 set foldenable
+
 highlight ColorColumn ctermbg=darkgray
-set colorcolumn=140
+set colorcolumn=120
 set backspace=indent,eol,start
+set incsearch
+set ignorecase
 
-" autocmd InsertEnter * se cul
-" set fdm=syntax
+scriptencoding utf-8
+set listchars+=trail:·
+set listchars+=tab:→\
+set list
 
-" inoremap ' ''<ESC>i
-" inoremap " ""<ESC>i
-" inoremap ( ()<ESC>i
-" inoremap [ []<ESC>i
-" inoremap { {}<ESC>i
-" inoremap {<CR> {<CR>}<ESC>O
-function! RemovePairs()
-    let s:line = getline(".")
-    let s:previous_char = s:line[col(".")-1]
+""""" nerdtree
+nnoremap <leader>n :NERDTreeFocus<CR>
+nnoremap <C-t> :NERDTreeToggle<CR>
+nnoremap <C-f> :NERDTreeFind<CR>
+let g:NERDTreeWinPos = "right"
+autocmd VimEnter * NERDTree | wincmd p
+" Exit Vim if NERDTree is the only window remaining in the only tab.
+autocmd BufEnter * if tabpagenr('$') == 1 && winnr('$') == 1 && exists('b:NERDTree') && b:NERDTree.isTabTree() | call feedkeys(":quit\<CR>:\<BS>") | endif
 
-    if index(["(","[","{"],s:previous_char) != -1
-        let l:original_pos = getpos(".")
-        execute "normal %"
-        let l:new_pos = getpos(".")
-        " only right (
-        if l:original_pos == l:new_pos
-            execute "normal! a\<BS>"
-            return
-        end
 
-        let l:line2 = getline(".")
-        if len(l:line2) == col(".")
-            execute "normal! v%xa"
-        else
-            execute "normal! v%xi"
-        end
-    else
-        execute "normal! a\<BS>"
-    end
-endfunction
+""""" airline
+let g:airline#extensions#branch#enabled     = 1
+let g:airline#extensions#syntastic#enabled  = 1
+let g:airline#extensions#tabline#enabled    = 1
 
-function! RemoveNextDoubleChar(char)
-    let l:line = getline(".")
-    let l:next_char = l:line[col(".")]
+""""" nerdcommenter
+let g:NERDSpaceDelims   = 1
 
-    if a:char == l:next_char
-        execute "normal! l"
-    else
-        execute "normal! i" . a:char . ""
-    end
-endfunction
+""""" copilot
+" Disable Copilot by default
+let g:copilot_enabled = v:false
 
-" inoremap <BS> <ESC>:call RemovePairs()<CR>a
-" inoremap ) <ESC>:call RemoveNextDoubleChar(')')<CR>a
-" inoremap ] <ESC>:call RemoveNextDoubleChar(']')<CR>a
-" inoremap } <ESC>:call RemoveNextDoubleChar('}')<CR>a
-" inoremap > <ESC>:call RemoveNextDoubleChar('>')<CR>a
 
-"""""""""""""""""""""""""""""""""""""""""""""""""
-" Configurations for vundle
-set nocompatible              " be iMproved, required
-filetype off                  " required
-" set the runtime path to include Vundle and initialize
-set rtp+=~/.vim/bundle/Vundle.vim
-call vundle#begin()
+call plug#begin()
 
-" let Vundle manage Vundle, required
-Plugin 'VundleVim/Vundle.vim'
-Plugin 'godlygeek/tabular'
-" Plugin 'plasticboy/vim-markdown'
-Plugin 'jiangmiao/auto-pairs'
-Plugin 'preservim/nerdcommenter'
-Plugin 'DoxygenToolkit.vim'
-Plugin 'ReedOei/vim-maude'
-Plugin 'preservim/nerdtree'
+Plug 'projekt0n/github-nvim-theme'
+Plug 'vim-airline/vim-airline'
+Plug 'jiangmiao/auto-pairs'
+Plug 'godlygeek/tabular'
+Plug 'preservim/nerdcommenter'
+Plug 'preservim/nerdtree'
+Plug 'plasticboy/vim-markdown'
+Plug 'tpope/vim-surround'
+Plug 'Yggdroot/indentLine'
+Plug 'tpope/vim-sensible'
+Plug 'ap/vim-css-color'
+Plug 'github/copilot.vim'
+Plug 'wakatime/vim-wakatime'
 
-" Plugin 'Valloric/YouCompleteMe'
+call plug#end()
 
-" All of your Plugins must be added before the following line
-call vundle#end()            " required
-filetype plugin indent on    " required
-"""""""""""""""""""""""""""""""""""""""""""""""""
+colorscheme pablo
+if has('nvim') && v:version > 800
+    colorscheme github_dark_dimmed
+endif
+

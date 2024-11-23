@@ -2,3 +2,5 @@
 
 source ~/.zshalias
 source ~/.zshfunc
+
+export EDITOR='vim'

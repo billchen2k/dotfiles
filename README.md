@@ -3,6 +3,8 @@
 - Vim
 - Zsh
 - Powerlevel10k
+- Tmux
+- Git
 - Aliases
 
 ## Installation

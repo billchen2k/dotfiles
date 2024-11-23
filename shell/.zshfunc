@@ -31,6 +31,7 @@ function tmlog() {
     printf '\e[3J' && log show --predicate 'subsystem == "com.apple.TimeMachine"' --info --last 6h | grep -F 'eMac' | grep -Fv 'etat' | awk -F']' '{print substr($0,1,19), $NF}'
 }
 
+
 function addpath() {
     if [ -d "$1" ]; then
         echo "export PATH=$1:\$PATH" >> ~/.zshrc
@@ -39,6 +40,115 @@ function addpath() {
     fi
 }
 
+#macro to kill the docker desktop app and the VM (excluding vmnetd -> it's a service)
+function kdo() {
+        ps ax|grep -i docker|egrep -iv 'grep|com.docker.vmnetd'|awk '{print $1}'|xargs kill
+}
+
+function rdo() {
+    kdo
+    open /Applications/Docker.app
+}
+
+
+function clearproxy() {
+    export HTTP_PROXY=''
+    export HTTPS_PROXY=''
+    export ALL_PROXY=''
+    export http_proxy=''
+    export https_proxy=''
+    export all_proxy=''
+}
+
+function kdo() {
+    ps ax|grep -i docker|egrep -iv 'grep|com.docker.vmnetd'|awk '{print $1}'|xargs kill
+}
+
+function killcache() {
+    # record current disk space
+    before=$(df -h | grep -E '/System/Volumes/Data$' | awk '{print $4}')
+    yarn cache clean
+    npm cache clean --force
+    pip cache purge
+    conda clean -t
+    brew cleanup --prune=all
+    after=$(df -h | grep -E '/System/Volumes/Data$' | awk '{print $4}')
+    echo "Disk space cleaned. $before -> $after"
+}
+
+function ejectall() {
+    disks=$(diskutil list external | sed -n '/[Ss]cheme/s/.*B *//p')
+    if [ "$disks" ]
+    then
+    echo "$disks" | while read line ; do
+        echo "Ejecting $line"
+        diskutil unmountDisk /dev/$line
+    done
+    else
+    echo "No external disks to eject"
+    fi
+}
+
+function pdfrelease {
+  gs -sDEVICE=pdfwrite \
+     -dCompatibilityLevel=1.4 \
+     -dEmbedAllFonts=true \
+     -dSubsetFonts=true \
+     -r720 \
+     -dNOPAUSE \
+     -dBATCH \
+     -sOutputFile="${1:r}_release.pdf" \
+     "$1"
+}
+
 function sgs() {
     sgpt --shell "$*"
+}
+
+function tsping() {
+    active_nodes=$(tailscale status | grep 'offers exit node')
+    # Loop through each active node
+    echo "$active_nodes" | while read -r line; do
+        # Extract the IP address from the line
+        ip=$(echo $line | awk '{print $1}')
+
+        # Ping the IP address
+        ping_result=$(tailscale ping $ip)
+
+        # Check if the ping was successful
+        if echo "$ping_result" | grep -q 'pong'; then
+            # If successful, print the IP and the ping result
+            echo "Successful ping to $ip: $ping_result"
+        else
+            # If unsuccessful, print that the ping failed
+            echo "Failed to ping $ip"
+        fi
+    done
+}
+
+function ffcom() {
+  if [ "$#" -lt 1 ]; then
+    echo "Usage: ffcom <input_file>"
+    echo "Example: ffcom input.mkv"
+    return 1
+  fi
+
+  local input_file=$1
+  local output_file="${input_file%.*}_com.mp4"  # Output file name with _com.mp4 suffix
+
+  # Check if input file exists
+  if [ ! -f "$input_file" ]; then
+    echo "Error: Input file '$input_file' not found."
+    return 1
+  fi
+
+  echo "Compressing '$input_file' with libx265 (H.265 codec)..."
+  ffmpeg -i "$input_file" -vcodec libx265 -crf 28 -preset medium -y "$output_file"
+
+  if [ $? -eq 0 ]; then
+    echo "Compression complete: '$output_file'"
+  else
+    echo "Compression failed!"
+    return 1
+  fi
 }

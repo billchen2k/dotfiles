@@ -16,7 +16,7 @@ sudo dnf isntall -y xorg-x11-xauth cmake ninja-build
 if [ $1 = "--cn" ]
 then
     echo "Will use cn proxy."
-    export cnproxy=https://mirror.ghproxy.com/
+    export cnproxy=https://ghp.ci/
 else
     unset cnproxy
 fi
