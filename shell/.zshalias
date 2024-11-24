@@ -1,12 +1,3 @@
-alias bootcamp="/usr/sbin/bless -mount /Volumes/BOOTCAMP --setBoot  --nextonly; reboot"
-alias tmd="tmutil deletelocalsnapshots /System/Volumes/Data"
-alias ipic="/usr/libexec/PlistBuddy -c "Set ':values:Markdown Flag:value' `date +%s`" /Users/`whoami`/Library/Containers/net.toolinbox.ipic/Data/Library/SyncedPreferences/net.toolinbox.ipic.plist && nohup /Applications/iPic.app/Contents/MacOS/iPic &"
-alias prl="sudo -b /Applications/Parallels\ Desktop.app/Contents/MacOS/prl_client_app"
-alias osscount="ossutil ls oss://billc/img | wc -l | xargs -I {} echo {}-4 | bc | xargs printf 'Total images in oss://billc/img: %d\n'"
-alias aget="aria2c"
-alias brewski="brew update && brew upgrade && brew cleanup -s; brew doctor && rm -rdf /Users/billchen/Library/Caches/Homebrew"
-alias cdc="cd ~/Workspace/LearningRepo/Course/"
-alias killnotif="ps -ax | grep /NotificationCenter | awk 'NR==1 {print $1}' | xargs kill -9"
 alias vim=nvim
 alias cloce="cloc --exclude-dir=node_modules,public,dist,build,target,pnpm-lock.yaml ."
 
@@ -24,11 +15,8 @@ if [ -x "$(command -v exa)" ]; then
     alias ll="exa --long --header --classify --icons --group-directories-first --no-permissions"
     alias lp="exa --long --header --classify --icons --group-directories-first"
     alias la="exa -a --long --header --classify --icons --group-directories-first"
-    # alias lt="exa --tree --long --header --classify --icons --group-directories-first"
+    alias lt="exa --tree --long --header --classify --icons --group-directories-first"
     alias t="exa --tree --header --classify --icons --group-directories-first"
 fi
 
-# alias ejectall='osascript -e "tell application \"Finder\" to eject (every disk whose ejectable is true)"'
-alias tailscale='/Applications/Tailscale.app/Contents/MacOS/Tailscale'
-alias emacs='emacs -nw'
 alias tmlogs="printf '\e[3J' && log show --predicate 'subsystem == "com.apple.TimeMachine"' --info --last 6h | grep -F 'eMac' | grep -Fv 'etat' | awk -F']' '{print substr($0,1,19), $NF}' "

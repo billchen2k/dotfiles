@@ -11,8 +11,12 @@ sh -c "$(curl -fsSL ${cnproxy}https://raw.github.com/ohmyzsh/ohmyzsh/master/tool
 git clone --depth=1 ${cnproxy}https://github.com/romkatv/powerlevel10k.git ${ZSH_CUSTOM:-$HOME/.oh-my-zsh/custom}/themes/powerlevel10k
 sed -i.bak 's#^ZSH_THEME=\".*\"#ZSH_THEME=\"powerlevel10k/powerlevel10k\"#g' ~/.zshrc
 cp shell/.p10k.zsh ~/.p10k.zsh
-cp shell/.zshalias ~/.zshalias
-cp shell/.zshfunc ~/.zshfunc
+
+ln -sf "$(pwd)/shell/.zshalias" ~/.zshalias
+ln -sf "$(pwd)/shell/.zshfunc" ~/.zshfunc
+touch ~/.zshalias.local
+touch ~/.zshfunc.local
+
 cat shell/.zshrc >> ~/.zshrc
 
 # Plugins
@@ -34,7 +38,7 @@ curl -fLo ~/.vim/autoload/plug.vim --create-dirs ${cnproxy}https://raw.githubuse
 if [ -f ~/.vimrc ]; then
     mv ~/.vimrc ~/.vimrc.$(date +%Y%m%d%H%M%S).bak
 fi
-ln -s "$(pwd)/vim/.vimrc" ~/.vimrc
+ln -sf "$(pwd)/vim/.vimrc" ~/.vimrc
 
 # Install vim-plug plugins
 vim +PlugInstall +qall

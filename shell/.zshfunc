@@ -4,37 +4,20 @@ function w3mg() {
 
 function gitnew() {
     touch ${1}
-    echo ${1} >> ${1}
+    echo ${1} >>${1}
     git add .
     git commit -m "${1}"
 }
 
-function powerstat() {
-    b=$(system_profiler SPPowerDataType)
-    amp=$(echo "$b" | grep 'Amperage (mA):' | cut -d ':' -f 2 | xargs)
-    volt=$(echo "$b" | grep 'Voltage (mV):' | cut -d ':' -f 2 | xargs)
-    power=$(($amp * $volt / 1000))
-    echo "$b" | grep --color=never -A 1 'Battery Information:'
-    echo "$b" | grep --color=never -A 1 'Amperage (mA)'
-    echo "      Total Power (mW): $power"
-    echo ""
-    echo "$b" | grep --color=never -A 99 'AC Charger Information:'
-}
-
-function patch (){
+function patch() {
     xattr -cr "$1"
     sudo codesign --force --deep --sign - "$1"
     echo "$1"
 }
 
-function tmlog() {
-    printf '\e[3J' && log show --predicate 'subsystem == "com.apple.TimeMachine"' --info --last 6h | grep -F 'eMac' | grep -Fv 'etat' | awk -F']' '{print substr($0,1,19), $NF}'
-}
-
-
 function addpath() {
     if [ -d "$1" ]; then
-        echo "export PATH=$1:\$PATH" >> ~/.zshrc
+        echo "export PATH=$1:\$PATH" >>~/.zshrc
         echo "Added $1 to PATH."
         source ~/.zshrc
     fi
@@ -42,7 +25,7 @@ function addpath() {
 
 #macro to kill the docker desktop app and the VM (excluding vmnetd -> it's a service)
 function kdo() {
-        ps ax|grep -i docker|egrep -iv 'grep|com.docker.vmnetd'|awk '{print $1}'|xargs kill
+    ps ax | grep -i docker | egrep -iv 'grep|com.docker.vmnetd' | awk '{print $1}' | xargs kill
 }
 
 function rdo() {
@@ -50,6 +33,9 @@ function rdo() {
     open /Applications/Docker.app
 }
 
+function genpass() {
+    openssl rand -base64 16 | pbcopy
+}
 
 function clearproxy() {
     export HTTP_PROXY=''
@@ -61,44 +47,19 @@ function clearproxy() {
 }
 
 function kdo() {
-    ps ax|grep -i docker|egrep -iv 'grep|com.docker.vmnetd'|awk '{print $1}'|xargs kill
-}
-
-function killcache() {
-    # record current disk space
-    before=$(df -h | grep -E '/System/Volumes/Data$' | awk '{print $4}')
-    yarn cache clean
-    npm cache clean --force
-    pip cache purge
-    conda clean -t
-    brew cleanup --prune=all
-    after=$(df -h | grep -E '/System/Volumes/Data$' | awk '{print $4}')
-    echo "Disk space cleaned. $before -> $after"
-}
-
-function ejectall() {
-    disks=$(diskutil list external | sed -n '/[Ss]cheme/s/.*B *//p')
-    if [ "$disks" ]
-    then
-    echo "$disks" | while read line ; do
-        echo "Ejecting $line"
-        diskutil unmountDisk /dev/$line
-    done
-    else
-    echo "No external disks to eject"
-    fi
+    ps ax | grep -i docker | egrep -iv 'grep|com.docker.vmnetd' | awk '{print $1}' | xargs kill
 }
 
 function pdfrelease {
-  gs -sDEVICE=pdfwrite \
-     -dCompatibilityLevel=1.4 \
-     -dEmbedAllFonts=true \
-     -dSubsetFonts=true \
-     -r720 \
-     -dNOPAUSE \
-     -dBATCH \
-     -sOutputFile="${1:r}_release.pdf" \
-     "$1"
+    gs -sDEVICE=pdfwrite \
+        -dCompatibilityLevel=1.4 \
+        -dEmbedAllFonts=true \
+        -dSubsetFonts=true \
+        -r720 \
+        -dNOPAUSE \
+        -dBATCH \
+        -sOutputFile="${1:r}_release.pdf" \
+        "$1"
 }
 
 function sgs() {
@@ -127,51 +88,48 @@ function tsping() {
 }
 
 function ffcom() {
-  if [ "$#" -lt 1 ]; then
-    echo "Usage: ffcom <input_file>"
-    echo "Example: ffcom input.mkv"
-    return 1
-  fi
+    if [ "$#" -lt 1 ]; then
+        echo "Usage: ffcom <input_file>"
+        echo "Example: ffcom input.mkv"
+        return 1
+    fi
+    local input_file=$1
+    local output_file="${input_file%.*}_com.mp4" # Output file name with _com.mp4 suffix
 
-  local input_file=$1
-  local output_file="${input_file%.*}_com.mp4"  # Output file name with _com.mp4 suffix
+    if [ ! -f "$input_file" ]; then
+        echo "Error: Input file '$input_file' not found."
+        return 1
+    fi
+    echo "Compressing '$input_file' with libx265 (H.265 codec)..."
+    ffmpeg -i "$input_file" -vcodec libx265 -crf 28 -preset medium -y "$output_file"
 
-  # Check if input file exists
-  if [ ! -f "$input_file" ]; then
-    echo "Error: Input file '$input_file' not found."
-    return 1
-  fi
-
-  echo "Compressing '$input_file' with libx265 (H.265 codec)..."
-  ffmpeg -i "$input_file" -vcodec libx265 -crf 28 -preset medium -y "$output_file"
-
-  if [ $? -eq 0 ]; then
-    echo "Compression complete: '$output_file'"
-  else
-    echo "Compression failed!"
-    return 1
-  fi
+    if [ $? -eq 0 ]; then
+        echo "Compression complete: '$output_file'"
+    else
+        echo "Compression failed!"
+        return 1
+    fi
 }
 
-sshperm() {
-  local ssh_dir="$HOME/.ssh"
-  if [[ ! -d $ssh_dir ]]; then
-    echo "Error: $ssh_dir does not exist."
-    return 1
-  fi
-  echo "Setting permissions for $ssh_dir..."
-  chmod 700 "$ssh_dir"
-  echo "Fixing permissions for private keys..."
-  find "$ssh_dir" -type f -name "id_*" -exec chmod 600 {} \;
-  echo "Fixing permissions for public keys..."
-  find "$ssh_dir" -type f -name "*.pub" -exec chmod 644 {} \;
-  if [[ -f "$ssh_dir/authorized_keys" ]]; then
-    echo "Fixing permissions for authorized_keys..."
-    chmod 600 "$ssh_dir/authorized_keys"
-  fi
-  if [[ -f "$ssh_dir/known_hosts" ]]; then
-    echo "Fixing permissions for known_hosts..."
-    chmod 644 "$ssh_dir/known_hosts"
-  fi
-  echo "SSH permissions fixed successfully!"
+function sshperm() {
+    local ssh_dir="$HOME/.ssh"
+    if [[ ! -d $ssh_dir ]]; then
+        echo "Error: $ssh_dir does not exist."
+        return 1
+    fi
+    echo "Setting permissions for $ssh_dir..."
+    chmod 700 "$ssh_dir"
+    echo "Fixing permissions for private keys..."
+    find "$ssh_dir" -type f -name "id_*" -exec chmod 600 {} \;
+    echo "Fixing permissions for public keys..."
+    find "$ssh_dir" -type f -name "*.pub" -exec chmod 644 {} \;
+    if [[ -f "$ssh_dir/authorized_keys" ]]; then
+        echo "Fixing permissions for authorized_keys..."
+        chmod 600 "$ssh_dir/authorized_keys"
+    fi
+    if [[ -f "$ssh_dir/known_hosts" ]]; then
+        echo "Fixing permissions for known_hosts..."
+        chmod 644 "$ssh_dir/known_hosts"
+    fi
+    echo "SSH permissions fixed successfully!"
 }
