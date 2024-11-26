@@ -29,7 +29,13 @@ set listchars+=trail:·
 set listchars+=tab:→\
 set list
 
-""""" nerdtree
+" connect system clipboard (use star register)
+noremap <Leader>y "+y
+noremap <Leader>p "+p
+noremap <Leader>Y "+Y
+noremap <Leader>P "+P
+
+"" nerdtree
 nnoremap <leader>n :NERDTreeFocus<CR>
 nnoremap <C-t> :NERDTreeToggle<CR>
 nnoremap <C-f> :NERDTreeFind<CR>
