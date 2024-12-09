@@ -15,6 +15,7 @@ then
 fi
 
 sudo apt update
-sudo apt install -y zsh git curl vim neovim wget tmux tree iputils-ping
+sudo apt install -y zsh git curl vim neovim wget tmux tree unzip
+sudo apt install -y fd-find iputils-ping pipx
 
 ./install-base

@@ -10,8 +10,8 @@ sh -c "$(curl -fsSL ${cnproxy}https://raw.github.com/ohmyzsh/ohmyzsh/master/tool
 # p10k
 git clone --depth=1 ${cnproxy}https://github.com/romkatv/powerlevel10k.git ${ZSH_CUSTOM:-$HOME/.oh-my-zsh/custom}/themes/powerlevel10k
 sed -i.bak 's#^ZSH_THEME=\".*\"#ZSH_THEME=\"powerlevel10k/powerlevel10k\"#g' ~/.zshrc
-cp shell/.p10k.zsh ~/.p10k.zsh
 
+ln -sf "$(pwd)/shell/.p10k.zsh" ~/.p10k.zsh
 ln -sf "$(pwd)/shell/.zshalias" ~/.zshalias
 ln -sf "$(pwd)/shell/.zshfunc" ~/.zshfunc
 touch ~/.zshalias.local
@@ -52,8 +52,8 @@ ln -s "$(pwd)/tmux/.tmux.conf" ~/.tmux.conf
 
 # ----- Git -----
 echo
-git config --global user.name "Bill Chen"
-git config --global user.email "dev@billc.io"
+git config --global user.name "Juntong Chen"
+git config --global user.email "dev@jtchen.io"
 git config --global core.editor nvim
 git config --global core.pager "less -R"
 git config --global core.excludesfile ~/.config/.gitignore_global
@@ -63,11 +63,13 @@ ln -s "$(pwd)/git/.gitignore_global" ~/.config/.gitignore_global
 
 # ----- Others -----
 
-# zoixide
 echo "" >> ~/.zshrc
 echo "export PATH=\$PATH:~/.local/bin" >> ~/.zshrc
 echo "eval \"\$(zoxide init zsh)\"" >> ~/.zshrc
 curl -sSfL ${cnproxy}https://raw.githubusercontent.com/ajeetdsouza/zoxide/main/install.sh | sh
+
+mkdir -p ~/.local/bin
+ln -s $(which fdfind) ~/.local/bin/fd
 
 chsh -s $(which zsh)
 echo "Finished. Please DO NOT move the dotfiles directory, or the symbolic links will be broken."
